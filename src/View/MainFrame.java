@@ -1,5 +1,6 @@
 package View;
 
+import View.Panels.GamePanel;
 import View.Panels.MainMenuPanel;
 import View.Panels.SettingPanel;
 
@@ -8,10 +9,10 @@ import javax.swing.*;
 public class MainFrame extends JFrame {
     public MainFrame(){
         super("Billiard");
-        setSize(500, 400);
+        setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        setContentPane(new MainMenuPanel());
-        setContentPane(new SettingPanel());
+        setContentPane(new GamePanel());
         setLocationRelativeTo(null);
         setVisible(true);
     }
