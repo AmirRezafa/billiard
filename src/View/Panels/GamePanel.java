@@ -1,5 +1,6 @@
 package View.Panels;
 
+import View.Components.BallView;
 import View.Components.PocketView;
 
 import javax.swing.*;
@@ -38,6 +39,8 @@ public class GamePanel extends JPanel {
         PocketView.Draw(w, 4 * w + 0.75 * w, r, g2);
         PocketView.Draw(w * 5, 4 * w + 0.75 * w + w/20,0.9 * r, g2);
         PocketView.Draw(9 * w, 4 * w + 0.75 * w, r, g2);
+
+        BallView.Draw(300, 300, 0, 20, 5,Color.red, true, g2);
     }
 
 }
