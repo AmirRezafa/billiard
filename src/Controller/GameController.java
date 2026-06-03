@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public class GameController implements MouseListener, MouseMotionListener {
     private GamePanel GP;
+    private PhysicsEngine PE;
     private boolean showCue = false;
 
     private boolean dragging = false;
@@ -21,8 +22,9 @@ public class GameController implements MouseListener, MouseMotionListener {
     private int powerrange = 0;
     public double angle;
 
-    public GameController(GamePanel GP){
+    public GameController(GamePanel GP, PhysicsEngine PE){
         this.GP = GP;
+        this.PE = PE;
     }
 
     private Color getBallColor(int number) {
@@ -92,6 +94,7 @@ public class GameController implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        if(PE.anythingMove()) return;
         Ball cueBall = Game.getCueBall();
         double w = GP.getWidth() * 0.1;
         double dx = e.getX() - GP.getBallR() - cueBall.getX() * w;
@@ -126,7 +129,7 @@ public class GameController implements MouseListener, MouseMotionListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if(dragging){
-            if(powerrange > 1) ;
+            if(powerrange > 1) PE.shoot(angle, powerrange, GP.getWidth() * 0.1);
             else System.out.println("Cancelled");
             dragging = false;
             showCue = false;

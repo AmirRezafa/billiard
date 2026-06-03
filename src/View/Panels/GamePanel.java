@@ -1,6 +1,7 @@
 package View.Panels;
 
 import Controller.GameController;
+import Controller.PhysicsEngine;
 import Model.Entities.Ball;
 import Model.Game.Game;
 import View.Components.BallView;
@@ -13,18 +14,22 @@ import java.awt.*;
 public class GamePanel extends JPanel {
     private int ballR = 5;
     private GameController GC;
+    private PhysicsEngine PE;
 
     public GamePanel(){
         setBackground(Color.BLACK);
-        GC = new GameController(this);
+        PE = new PhysicsEngine();
+
+        GC = new GameController(this, PE);
         GC.createBalls();
+
         addMouseMotionListener(GC);
         addMouseListener(GC);
+
         Timer timer = new Timer(
                 16,
                 e -> repaint()
         );
-
         timer.start();
     }
 
@@ -41,6 +46,7 @@ public class GamePanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        PE.updateBalls();
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
