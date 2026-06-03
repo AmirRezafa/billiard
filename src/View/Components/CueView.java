@@ -9,13 +9,13 @@ public class CueView {
     private static Color color = new Color(205, 133, 63);
 
     public static void draw(Graphics2D g2, Cue cue, Ball cueBall,
-            double w, int ballRadius) {
+            double w, int ballRadius, int powerrange) {
 
         double x = cueBall.getX() * w + ballRadius;
         double y = cueBall.getY() * w + ballRadius;
         double angle = cue.getAngle();
 
-        int d = ballRadius + 10;
+        int d = ballRadius + 10 + powerrange;
 
         Graphics2D g2Copy = (Graphics2D) g2.create();
 

@@ -19,6 +19,7 @@ public class GamePanel extends JPanel {
         GC = new GameController(this);
         GC.createBalls();
         addMouseMotionListener(GC);
+        addMouseListener(GC);
     }
 
     private void drawPowerBar(Graphics2D g2, int power, int x, int y, int width, int height) {
@@ -41,7 +42,7 @@ public class GamePanel extends JPanel {
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON
         );
-        double w = (int)(getWidth() / 10);
+        double w = getWidth() * 0.1;
 
         ballR = (int)(w / 6);
 
@@ -69,9 +70,12 @@ public class GamePanel extends JPanel {
                     ball.getColor(), ball.isBicolor(), g2);
         }
 
-        CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR);
+        if(GC.isShowCue()) CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR, GC.getPowerrange());
 
-        drawPowerBar(g2, 100, (int)(0.75 * w), (int)(5.1 * w), (int)(5 * w), 25);
+        drawPowerBar(g2, GC.getPowerrange(), (int)(0.75 * w), (int)(5.1 * w), (int)(5 * w), 25);
     }
 
+    public int getBallR() {
+        return ballR;
+    }
 }

@@ -6,16 +6,25 @@ import View.Panels.GamePanel;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 
 
-public class GameController implements MouseMotionListener {
+public class GameController implements MouseListener, MouseMotionListener {
     private GamePanel GP;
+    private boolean showCue = false;
+
+    private boolean dragging = false;
+    private int startx, starty;
+    private int powerrange = 0;
+    public double angle;
+
     public GameController(GamePanel GP){
         this.GP = GP;
     }
+
     private Color getBallColor(int number) {
         return switch (number) {
             case 1, 9 -> Color.YELLOW;
@@ -60,22 +69,81 @@ public class GameController implements MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if(!dragging) return;
+        double dx = e.getX() - startx;
+        double dy = e.getY() - starty;
+        powerrange = (int)(Math.sqrt(dx * dx + dy * dy));
+
+        Ball cueBall = Game.getCueBall();
+        double w = GP.getWidth() * 0.1;
+        double dxx = e.getX() - GP.getBallR() - cueBall.getX() * w;
+        double dyy = e.getY() - GP.getBallR() - cueBall.getY() * w;
+
+        double angle = Math.atan2(dyy, dxx);
+        double distance = Math.sqrt(dxx * dxx + dyy * dyy);
+
+        if(Math.abs(this.angle - angle) > 1 || distance < (GP.getBallR() * 3)){
+            powerrange = 0;
+        }
+
+        GP.repaint();
+    }
+
+
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Ball cueBall = Game.getCueBall();
+        double w = GP.getWidth() * 0.1;
+        double dx = e.getX() - GP.getBallR() - cueBall.getX() * w;
+        double dy = e.getY() - GP.getBallR() - cueBall.getY() * w;
+
+        angle = Math.atan2(dy, dx);
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        showCue = distance < (GP.getBallR() * 3);
+        Game.getCue().setAngle(angle);
+        powerrange = 0;
+        GP.repaint();
+    }
+
+    public boolean isShowCue() {
+        return showCue;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
 
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-        System.out.println(1);
-        Ball cueBall = Game.getCueBall();
+    public void mousePressed(MouseEvent e) {
+        if(showCue){
+            dragging = true;
+            startx = e.getX();
+            starty = e.getY();
+        }
+    }
 
-        double w = (int)(GP.getWidth() / 10);
-        double angle = Math.atan2(
-                e.getY() - cueBall.getY() * w,
-                e.getX() - cueBall.getX() * w
-        );
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if(dragging){
+            dragging = false;
+        }
+    }
 
-        Game.getCue().setAngle(angle);
+    @Override
+    public void mouseEntered(MouseEvent e) {
 
-        GP.repaint();
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    public int getPowerrange() {
+        if(powerrange > 100) return 100;
+        return powerrange;
     }
 }
