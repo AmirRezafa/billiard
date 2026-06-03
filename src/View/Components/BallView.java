@@ -9,6 +9,7 @@ public class BallView {
         else g2.setColor(color);
         g2.fillOval(x, y, 2 * r, 2 * r);
 
+        if(number == 0) return;
         AffineTransform old = g2.getTransform();
 
         //TODO: Add angle to physic in future ایشالا
@@ -20,14 +21,16 @@ public class BallView {
         }
 
         g2.setTransform(old);
+        g2.setColor(Color.WHITE);
+        g2.fillOval(x + (int)(r * 0.5), y +  (int)(r * 0.5), r, r);
         g2.setColor(Color.BLACK);
         String text = String.valueOf(number);
-        Font font = new Font("Arial", Font.BOLD, r);
+        Font font = new Font("Arial", Font.BOLD, (int)(r * 0.6));
         g2.setFont(font);
         FontMetrics fm = g2.getFontMetrics();
 
         g2.drawString(text, x + (r + r - fm.stringWidth(text)) / 2,
-                y + (r + r + fm.getAscent()) / 2);
+                y + ((int)(r * 0.9) + r + fm.getAscent()) / 2);
 
     }
 }

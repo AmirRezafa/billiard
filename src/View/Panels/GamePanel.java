@@ -37,7 +37,7 @@ public class GamePanel extends JPanel {
         );
         double w = (int)(getWidth() / 10);
 
-        ballR = (int)(w / 5);
+        ballR = (int)(w / 6);
 
         g2.setColor(new Color(160, 82, 45));
         g2.fillRoundRect((int)(0.75 * w), (int)(0.5 * w),
@@ -58,9 +58,11 @@ public class GamePanel extends JPanel {
         PocketView.Draw(9 * w, 4 * w + 0.75 * w, r, g2);
 
         for(Ball ball: Game.getBalls()){
-            BallView.Draw(ball.getX(), ball.getY(), 0, ballR, ball.getNumber(),
+            BallView.Draw((int)(ball.getX() * w), (int)(ball.getY() * w),
+                    0, ballR, ball.getNumber(),
                     ball.getColor(), ball.isBicolor(), g2);
         }
+
 
         drawPowerBar(g2, 100, (int)(0.75 * w), (int)(5.1 * w), (int)(5 * w), 25);
     }

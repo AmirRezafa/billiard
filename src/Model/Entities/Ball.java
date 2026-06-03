@@ -7,10 +7,10 @@ public class Ball {
     private Color color;
     private boolean bicolor;
 
-    private int x, y;
+    private double x, y;
     private boolean ontable;
 
-    public Ball(int number, Color color, boolean bicolor, int x, int y, boolean ontable) {
+    public Ball(int number, Color color, boolean bicolor, double x, double y, boolean ontable) {
         this.number = number;
         this.color = color;
         this.bicolor = bicolor;
@@ -31,11 +31,11 @@ public class Ball {
         return bicolor;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
