@@ -3,27 +3,27 @@ package Model.Entities;
 import java.awt.*;
 
 public class Pocket {
-    private int x, y;
-    private int r;
+    private double x, y;
+    private double r;
     // TODO: Select 1 pocket for last shot(8 th ball)
     // private String Name;
 
 
     public Pocket(double x, double y, double r) {
-        this.x = (int) x;
-        this.y = (int) y;
-        this.r = (int) r;
+        this.x = x;
+        this.y = y;
+        this.r = r;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public int getR() {
+    public double getR() {
         return r;
     }
 }

@@ -6,6 +6,7 @@ import Model.Game.Game;
 import View.Components.PocketView;
 import View.Panels.GamePanel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -32,15 +33,15 @@ public class GameController implements MouseListener, MouseMotionListener {
 
     public void createPockets(){
         double w = GP.getWidth() * 0.1;
-        double r = GP.getBallR() * 1.4;
+        double r = (GP.getBallR() / w) * 1.4;
 
-        Game.addPocket(new Pocket(w, 0.75 * w, r));
-        Game.addPocket(new Pocket(w * 5, 0.75 * w - w/20,0.9 * r));
-        Game.addPocket(new Pocket(9 * w, 0.75 * w, r));
+        Game.addPocket(new Pocket(1, 0.75, r));
+        Game.addPocket(new Pocket(5, 0.75 - 0.05,0.9 * r));
+        Game.addPocket(new Pocket(9, 0.75, r));
 
-        Game.addPocket(new Pocket(w, 4 * w + 0.75 * w, r));
-        Game.addPocket(new Pocket(w * 5, 4 * w + 0.75 * w + w/20,0.9 * r));
-        Game.addPocket(new Pocket(9 * w, 4 * w + 0.75 * w, r));
+        Game.addPocket(new Pocket(1, 4 + 0.75, r));
+        Game.addPocket(new Pocket(5, 4 + 0.75 + 0.05,0.9 * r));
+        Game.addPocket(new Pocket(9, 4 + 0.75, r));
     }
 
     private Color getBallColor(int number) {
@@ -85,21 +86,34 @@ public class GameController implements MouseListener, MouseMotionListener {
         }
     }
 
+    public void updateCue(MouseEvent e){
+        Ball cueBall = Game.getCueBall();
+        double w = GP.getWidth() * 0.1;
+        double dx = e.getX() - GP.getBallR() - cueBall.getX() * w;
+        double dy = e.getY() - GP.getBallR() - cueBall.getY() * w;
+
+        angle = Math.atan2(dy, dx);
+
+        Game.getCue().setAngle(angle);
+    }
+
     @Override
     public void mouseDragged(MouseEvent e) {
         if(!dragging) return;
-        double dx = e.getX() - startx;
-        double dy = e.getY() - starty;
-        powerrange = (int)(Math.sqrt(dx * dx + dy * dy));
-
+        updateCue(e);
         Ball cueBall = Game.getCueBall();
         double w = GP.getWidth() * 0.1;
+
+        double dx = startx - GP.getBallR() - cueBall.getX() * w;
+        double dy = starty - GP.getBallR() - cueBall.getY() * w;
+
         double dxx = e.getX() - GP.getBallR() - cueBall.getX() * w;
         double dyy = e.getY() - GP.getBallR() - cueBall.getY() * w;
 
-        double angle = Math.atan2(dyy, dxx);
+        powerrange = (int)(Math.sqrt(dxx * dxx + dyy * dyy) - Math.sqrt(dx * dx + dy * dy)) ;
+        powerrange = Math.max(powerrange, 0);
 
-        powerrange = Math.max(0, (int)(powerrange - w * Math.abs(this.angle - angle)));
+        double angle = Math.atan2(dyy, dxx);
 
 //        if(Math.abs(this.angle - angle) > 1 || distance < (GP.getBallR() * 3)){
 //            powerrange = 0;
@@ -121,7 +135,6 @@ public class GameController implements MouseListener, MouseMotionListener {
 
         showCue = (GP.getBallR() < distance) && (distance < GP.getBallR() * 6);
         Game.getCue().setAngle(angle);
-        powerrange = 0;
     }
 
     public boolean isShowCue() {
@@ -145,7 +158,7 @@ public class GameController implements MouseListener, MouseMotionListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if(dragging){
-            if(powerrange > 1) PE.shoot(angle, getPowerrange(), GP.getWidth() * 0.1);
+            if(powerrange > 0) PE.shoot(angle, getPowerrange(), GP.getWidth() * 0.1);
             else System.out.println("Cancelled");
             dragging = false;
             showCue = false;

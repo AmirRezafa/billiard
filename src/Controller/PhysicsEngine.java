@@ -41,8 +41,8 @@ public class PhysicsEngine {
     }
 
     public boolean pocketed(Ball ball, Pocket pocket, double w, double r){
-        double dx = ((ball.getX() * w) + r) - pocket.getX();
-        double dy = ((ball.getY() * w) + r) - pocket.getY();
+        double dx = ((ball.getX() * w) + r) - pocket.getX() * w;
+        double dy = ((ball.getY() * w) + r) - pocket.getY() * w;
         double distance = Math.sqrt(dx * dx + dy * dy);
         return (distance <= 2 * r);
     }
