@@ -17,7 +17,7 @@ public class BallView {
 
         if(bi) {
             g2.setColor(color);
-            g2.fillRoundRect(x + (int) (r / 2), y, r, 2 * r, (int)(r * 0.7), (int)(r * 0.7));
+            g2.fillRoundRect(x + (int) (r / 2), y, r, 2 * r, (int)(r * 0.8), (int)(r * 0.8));
         }
 
         g2.setTransform(old);

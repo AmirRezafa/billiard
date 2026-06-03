@@ -1,7 +1,9 @@
 package Controller;
 
 import Model.Entities.Ball;
+import Model.Entities.Pocket;
 import Model.Game.Game;
+import View.Components.PocketView;
 import View.Panels.GamePanel;
 
 import java.awt.*;
@@ -25,6 +27,20 @@ public class GameController implements MouseListener, MouseMotionListener {
     public GameController(GamePanel GP, PhysicsEngine PE){
         this.GP = GP;
         this.PE = PE;
+        createBalls();
+    }
+
+    public void createPockets(){
+        double w = GP.getWidth() * 0.1;
+        double r = GP.getBallR() * 1.4;
+
+        Game.addPocket(new Pocket(w, 0.75 * w, r));
+        Game.addPocket(new Pocket(w * 5, 0.75 * w - w/20,0.9 * r));
+        Game.addPocket(new Pocket(9 * w, 0.75 * w, r));
+
+        Game.addPocket(new Pocket(w, 4 * w + 0.75 * w, r));
+        Game.addPocket(new Pocket(w * 5, 4 * w + 0.75 * w + w/20,0.9 * r));
+        Game.addPocket(new Pocket(9 * w, 4 * w + 0.75 * w, r));
     }
 
     private Color getBallColor(int number) {
@@ -41,7 +57,7 @@ public class GameController implements MouseListener, MouseMotionListener {
         };
     }
 
-    public void createBalls() {
+    private void createBalls() {
         double startX = 6.5;
         double startY = 2.6;
 
@@ -58,13 +74,13 @@ public class GameController implements MouseListener, MouseMotionListener {
 
         for (int i = 0; i < rack.length; i++) {
 
-            double x = startX + i * 0.216;
-            double y = startY - i * 0.252;
+            double x = startX + i * 0.1944;
+            double y = startY - i * 0.2268;
 
             for (int j = 0; j < rack[i].length; j++) {
                 int number = rack[i][j];
                 Game.addBall(new Ball(number, getBallColor(number), number >= 9,
-                        x, y + j * 0.504, true));
+                        x, y + j * 0.4536, true));
             }
         }
     }

@@ -3,6 +3,7 @@ package View.Panels;
 import Controller.GameController;
 import Controller.PhysicsEngine;
 import Model.Entities.Ball;
+import Model.Entities.Pocket;
 import Model.Game.Game;
 import View.Components.BallView;
 import View.Components.CueView;
@@ -15,19 +16,19 @@ public class GamePanel extends JPanel {
     private int ballR = 5;
     private GameController GC;
     private PhysicsEngine PE;
+    private boolean firstFrame = true;
 
     public GamePanel(){
         setBackground(Color.BLACK);
         PE = new PhysicsEngine();
 
         GC = new GameController(this, PE);
-        GC.createBalls();
 
         addMouseMotionListener(GC);
         addMouseListener(GC);
 
         Timer timer = new Timer(
-                16,
+                8,
                 e -> repaint()
         );
         timer.start();
@@ -55,7 +56,7 @@ public class GamePanel extends JPanel {
         );
         double w = getWidth() * 0.1;
 
-        ballR = (int)(w / 6);
+        ballR = (int)(w * 0.15);
 
         PE.updateBalls(w, ballR);
 
@@ -67,15 +68,13 @@ public class GamePanel extends JPanel {
         g2.fillRoundRect((int)w, (int)(w * 0.75), (int)(w * 8)
                 , (int)(w * 4), (int)(w/3), (int)(w/3));
 
-        g2.setColor(Color.BLACK);
-        double r = w * 0.2;
-        PocketView.Draw(w, 0.75 * w, r, g2);
-        PocketView.Draw(w * 5, 0.75 * w - w/20,0.9 * r, g2);
-        PocketView.Draw(9 * w, 0.75 * w, r, g2);
-
-        PocketView.Draw(w, 4 * w + 0.75 * w, r, g2);
-        PocketView.Draw(w * 5, 4 * w + 0.75 * w + w/20,0.9 * r, g2);
-        PocketView.Draw(9 * w, 4 * w + 0.75 * w, r, g2);
+        if(firstFrame){
+            firstFrame = false;
+            GC.createPockets();
+        }
+        for(Pocket pocket: Game.getPockets()){
+            PocketView.Draw(pocket.getX(), pocket.getY(), pocket.getR(), g2);
+        }
 
         for(Ball ball: Game.getBalls()){
             BallView.Draw((int)(ball.getX() * w), (int)(ball.getY() * w),
