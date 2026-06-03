@@ -20,6 +20,12 @@ public class GamePanel extends JPanel {
         GC.createBalls();
         addMouseMotionListener(GC);
         addMouseListener(GC);
+        Timer timer = new Timer(
+                16,
+                e -> repaint()
+        );
+
+        timer.start();
     }
 
     private void drawPowerBar(Graphics2D g2, int power, int x, int y, int width, int height) {
