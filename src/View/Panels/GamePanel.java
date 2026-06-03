@@ -1,8 +1,10 @@
 package View.Panels;
 
+import Controller.GameController;
 import Model.Entities.Ball;
 import Model.Game.Game;
 import View.Components.BallView;
+import View.Components.CueView;
 import View.Components.PocketView;
 
 import javax.swing.*;
@@ -10,9 +12,13 @@ import java.awt.*;
 
 public class GamePanel extends JPanel {
     private int ballR = 5;
+    private GameController GC;
 
     public GamePanel(){
         setBackground(Color.BLACK);
+        GC = new GameController(this);
+        GC.createBalls();
+        addMouseMotionListener(GC);
     }
 
     private void drawPowerBar(Graphics2D g2, int power, int x, int y, int width, int height) {
@@ -63,6 +69,7 @@ public class GamePanel extends JPanel {
                     ball.getColor(), ball.isBicolor(), g2);
         }
 
+        CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR);
 
         drawPowerBar(g2, 100, (int)(0.75 * w), (int)(5.1 * w), (int)(5 * w), 25);
     }

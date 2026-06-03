@@ -9,6 +9,7 @@ public class BallView {
         else g2.setColor(color);
         g2.fillOval(x, y, 2 * r, 2 * r);
 
+        if(number == 0) System.out.println(x);
         if(number == 0) return;
         AffineTransform old = g2.getTransform();
 

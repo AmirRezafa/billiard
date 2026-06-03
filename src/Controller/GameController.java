@@ -2,14 +2,21 @@ package Controller;
 
 import Model.Entities.Ball;
 import Model.Game.Game;
+import View.Panels.GamePanel;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 
 
-public class GameController {
-    private static Color getBallColor(int number) {
+public class GameController implements MouseMotionListener {
+    private GamePanel GP;
+    public GameController(GamePanel GP){
+        this.GP = GP;
+    }
+    private Color getBallColor(int number) {
         return switch (number) {
             case 1, 9 -> Color.YELLOW;
             case 2, 10 -> Color.BLUE;
@@ -23,7 +30,7 @@ public class GameController {
         };
     }
 
-    public static void createBalls() {
+    public void createBalls() {
         double startX = 6.5;
         double startY = 2.6;
 
@@ -49,5 +56,26 @@ public class GameController {
                         x, y + j * 0.504, true));
             }
         }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        System.out.println(1);
+        Ball cueBall = Game.getCueBall();
+
+        double w = (int)(GP.getWidth() / 10);
+        double angle = Math.atan2(
+                e.getY() - cueBall.getY() * w,
+                e.getX() - cueBall.getX() * w
+        );
+
+        Game.getCue().setAngle(angle);
+
+        GP.repaint();
     }
 }
