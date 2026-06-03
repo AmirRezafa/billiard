@@ -85,4 +85,8 @@ public class Ball {
     public boolean isMoving(){
         return moving;
     }
+
+    public void pocket() {
+        ontable = false;
+    }
 }

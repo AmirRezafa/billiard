@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Entities.Ball;
+import Model.Entities.Pocket;
 import Model.Game.Game;
 
 import java.util.ArrayList;
@@ -39,8 +40,19 @@ public class PhysicsEngine {
         ball2.addVelocity(speed * nx, speed * ny);
     }
 
+    public boolean pocketed(Ball ball, Pocket pocket, double w, double r){
+        double dx = ((ball.getX() * w) + r) - pocket.getX();
+        double dy = ((ball.getY() * w) + r) - pocket.getY();
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        return (distance <= 2 * r);
+    }
+
     // BUGFIXED: updatePos ro gozashtam ke serfan jitter nashe
     public void collide(Ball ball, double w, double r){
+        for(Pocket pocket: Game.getPockets())
+            if(pocketed(ball, pocket, w, r)){
+                ball.pocket();
+            }
         if(ball.getX() <= 1 || ball.getX() + (2 * r / w) >= 9){
             ball.addVelocity(-2 * ball.getVelocityX(), 0);
             ball.updatePos();
@@ -53,14 +65,17 @@ public class PhysicsEngine {
 
     public void updateBalls(double w, double r){
         for(Ball ball: balls){
+            if(!ball.isOntable()) continue;
             if(ball.isMoving()){
                 for(Ball ball2: balls){
-                    if(ball == ball2) continue;
+                    if(ball == ball2 || !ball2.isOntable()) continue;
                     if(isCollide(ball, ball2, w, r)){
                         collide(ball, ball2);
                     }
                 }
-                collide(ball, w, r);
+                // Add "if" to optimize
+                if(ball.getY() < 1 || ball.getY() > 4.25 || ball.getX() < 1.25 || ball.getX() > 8.5)
+                    collide(ball, w, r);
                 ball.updatePos();
             }
         }
@@ -76,7 +91,7 @@ public class PhysicsEngine {
 
     public boolean anythingMove(){
         for(Ball ball: balls){
-            if(ball.isMoving()) return true;
+            if(ball.isMoving() && ball.isOntable()) return true;
         }
         return false;
     }

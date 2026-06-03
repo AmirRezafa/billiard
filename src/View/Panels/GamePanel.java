@@ -77,6 +77,7 @@ public class GamePanel extends JPanel {
         }
 
         for(Ball ball: Game.getBalls()){
+            if(!ball.isOntable()) continue;
             BallView.Draw((int)(ball.getX() * w), (int)(ball.getY() * w),
                     0, ballR, ball.getNumber(),
                     ball.getColor(), ball.isBicolor(), g2);

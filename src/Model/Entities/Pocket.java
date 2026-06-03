@@ -10,8 +10,8 @@ public class Pocket {
 
 
     public Pocket(double x, double y, double r) {
-        this.x = (int) (x - r);
-        this.y = (int) (y - r);
+        this.x = (int) x;
+        this.y = (int) y;
         this.r = (int) r;
     }
 
