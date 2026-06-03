@@ -46,7 +46,6 @@ public class GamePanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        PE.updateBalls();
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
@@ -57,6 +56,8 @@ public class GamePanel extends JPanel {
         double w = getWidth() * 0.1;
 
         ballR = (int)(w / 6);
+
+        PE.updateBalls(w, ballR);
 
         g2.setColor(new Color(160, 82, 45));
         g2.fillRoundRect((int)(0.75 * w), (int)(0.5 * w),

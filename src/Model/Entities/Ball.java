@@ -61,10 +61,11 @@ public class Ball {
         return velocityY;
     }
 
-    public void setVelocity(double velocityX, double velocityY) {
+    // addVelocity e na SetVelocity
+    public void addVelocity(double velocityX, double velocityY) {
         moving = true;
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
+        this.velocityX += velocityX;
+        this.velocityY += velocityY;
     }
 
     public void updatePos(){

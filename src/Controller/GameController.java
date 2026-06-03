@@ -103,7 +103,7 @@ public class GameController implements MouseListener, MouseMotionListener {
         angle = Math.atan2(dy, dx);
         double distance = Math.sqrt(dx * dx + dy * dy);
 
-        showCue = distance < (GP.getBallR() * 3);
+        showCue = (GP.getBallR() < distance) && (distance < GP.getBallR() * 6);
         Game.getCue().setAngle(angle);
         powerrange = 0;
     }
@@ -129,7 +129,7 @@ public class GameController implements MouseListener, MouseMotionListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if(dragging){
-            if(powerrange > 1) PE.shoot(angle, powerrange, GP.getWidth() * 0.1);
+            if(powerrange > 1) PE.shoot(angle, getPowerrange(), GP.getWidth() * 0.1);
             else System.out.println("Cancelled");
             dragging = false;
             showCue = false;
