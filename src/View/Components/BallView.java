@@ -4,7 +4,8 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public class BallView {
-    public static void Draw(int x, int y, int angle, int r, int number, Color color, boolean bi, Graphics2D g2){
+    public static void Draw(int x, int y, int angle, int r, int number, Color color, Graphics2D g2){
+        boolean bi = (number > 8);
         if(bi) g2.setColor(Color.WHITE);
         else g2.setColor(color);
         g2.fillOval(x, y, 2 * r, 2 * r);

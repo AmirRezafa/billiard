@@ -7,6 +7,7 @@ import Model.Entities.Player;
 import Model.Entities.Pocket;
 import Model.Game.Game;
 import Model.Game.GameState;
+import Model.Utils.GameStatus;
 import View.Components.BallView;
 import View.Components.CueView;
 import View.Components.PocketView;
@@ -20,19 +21,27 @@ public class GamePanel extends JPanel {
     private PhysicsEngine PE;
     private GameState GS;
     private boolean firstFrame = true;
+    private Player player1;
+    private Player player2;
 
     public GamePanel(){
         setBackground(Color.BLACK);
 
         // TODO: Fix this part
+        player1 = new Player("AmirReza");
+        player2 = new Player("Awmir");
+        
         GS = new GameState(
-                new Player("AmirReza"),
-                new Player("Awmir")
+                player1,
+                player2
         );
+
 
         PE = new PhysicsEngine();
 
         GC = new GameController(this, PE, GS);
+
+        PE.setGC(GC);
 
 
         addMouseMotionListener(GC);
@@ -94,11 +103,10 @@ public class GamePanel extends JPanel {
             if (!ball.isOntable()) continue;
             BallView.Draw((int) (ball.getX() * w), (int) (ball.getY() * w),
                     0, ballR, ball.getNumber(),
-                    ball.getColor(), ball.isBicolor(), g2);
+                    ball.getColor(), g2);
         }
 
         if (GC.isShowCue()) CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR, GC.getPowerrange());
-
 
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, (int)(w / 5)));
@@ -113,9 +121,9 @@ public class GamePanel extends JPanel {
                 (int) (0.5 * w - w / 8));
 
         String turn = "Turn: " + GS.getTurn().getName();
-        String player2s = GS.getPlayer2().getName() + ": " + GS.getPlayer2().getScore();
+        String player2s = player2.getName() + ": " + player2.getScore();
 
-        g2.drawString(GS.getPlayer1().getName() + ": " + GS.getPlayer1().getScore(),
+        g2.drawString(player1.getName() + ": " + player1.getScore(),
                 (int) (0.75 * w), (int) (5.25 * w));
 
         g2.drawString(turn, (int) (5 * w) -
@@ -123,14 +131,16 @@ public class GamePanel extends JPanel {
 
         g2.drawString(player2s, (int) (9.25 * w) - fm.stringWidth(player2s), (int) (5.25 * w));
 
+
+
         BallView.Draw((int) (0.75 * w), (int) (5.25 * w) + (int)(ballR * 0.5),
-                0, (int)ballR, 7,
-                new Color(128, 0, 0), false, g2);
+                0, (int)ballR, player1.getColorNumber(),
+                GC.getBallColor(player2.getColorNumber()), g2);
 
         BallView.Draw((int) (9.25 * w) - fm.stringWidth(player2s),
                 (int) (5.25 * w) + (int)(ballR * 0.5),
-                0, (int)(ballR), 15,
-                new Color(128, 0, 0), true, g2);
+                0, (int)(ballR), player2.getColorNumber(),
+                GC.getBallColor(player2.getColorNumber()), g2);
 
     }
 

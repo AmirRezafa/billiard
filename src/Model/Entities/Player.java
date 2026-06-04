@@ -4,7 +4,7 @@ public class Player {
     private String name;
     private int foulCount = 0;
     private int score = 0;
-    private boolean biColor;
+    private Boolean biColor;
     private int wins = 0;
 
     public Player(String name) {
@@ -46,5 +46,11 @@ public class Player {
 
     public void setWins(int wins) {
         this.wins = wins;
+    }
+
+    public int getColorNumber(){
+        if(biColor == null) return 8;
+        else if(biColor) return 15;
+        else return 7;
     }
 }

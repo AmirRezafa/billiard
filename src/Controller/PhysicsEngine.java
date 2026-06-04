@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class PhysicsEngine {
     private ArrayList<Ball> balls;
+    private GameController GC;
+    private boolean motion = false;
 
     public PhysicsEngine() {
         balls = Game.getBalls();
@@ -51,7 +53,7 @@ public class PhysicsEngine {
     public void collide(Ball ball, double w, double r){
         for(Pocket pocket: Game.getPockets())
             if(pocketed(ball, pocket, w, r)){
-                ball.pocket();
+                GC.pocketed(pocket, ball);
             }
         if(ball.getX() <= 1 || ball.getX() + (2 * r / w) >= 9){
             ball.addVelocity(-2 * ball.getVelocityX(), 0);
@@ -64,6 +66,7 @@ public class PhysicsEngine {
     }
 
     public void updateBalls(double w, double r){
+        anythingMove();
         for(Ball ball: balls){
             if(!ball.isOntable()) continue;
             if(ball.isMoving()){
@@ -83,16 +86,24 @@ public class PhysicsEngine {
 
     public void shoot(double angle, int powerRange, double w) {
 //        System.out.println(w);
-
+        motion = true;
         double vx = (w / 118) * Math.cos(angle) * powerRange / 500;
         double vy = (w / 118) * Math.sin(angle) * powerRange / 500;
         Game.getCueBall().addVelocity(vx, vy);
+        GC.shooted();
     }
 
     public boolean anythingMove(){
+        if(!motion) return false;
         for(Ball ball: balls){
             if(ball.isMoving() && ball.isOntable()) return true;
         }
+        GC.shootingEnded();
+        motion = false;
         return false;
+    }
+
+    public void setGC(GameController GC){
+        this.GC = GC;
     }
 }

@@ -27,6 +27,11 @@ public class GameState {
         return (Turn ? Player1 : Player2);
     }
 
+    // xD
+    public Player getNotTurn(){
+        return (Turn ? Player2 : Player1);
+    }
+
     public void switchTurn() {
         Turn = !Turn;
     }

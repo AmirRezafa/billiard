@@ -12,10 +12,10 @@ public class Ball {
     private boolean ontable;
     private boolean moving = false;
 
-    public Ball(int number, Color color, boolean bicolor, double x, double y, boolean ontable) {
+    public Ball(int number, Color color, double x, double y, boolean ontable) {
         this.number = number;
         this.color = color;
-        this.bicolor = bicolor;
+        this.bicolor = (number > 8);
         this.x = x;
         this.y = y;
         this.ontable = ontable;
