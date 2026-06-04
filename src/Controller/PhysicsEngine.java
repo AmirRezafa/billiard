@@ -56,10 +56,12 @@ public class PhysicsEngine {
                 GC.pocketed(pocket, ball);
             }
         if(ball.getX() <= 1 || ball.getX() + (2 * r / w) >= 9){
+            GC.collideWall();
             ball.addVelocity(-2 * ball.getVelocityX(), 0);
             ball.updatePos();
         }
         if(ball.getY() <= 0.75 || ball.getY() + (2 * r / w) >= 4.75){
+            GC.collideWall();
             ball.addVelocity(0, -2 * ball.getVelocityY());
             ball.updatePos();
         }
@@ -90,7 +92,7 @@ public class PhysicsEngine {
         double vx = (w / 118) * Math.cos(angle) * powerRange / 500;
         double vy = (w / 118) * Math.sin(angle) * powerRange / 500;
         Game.getCueBall().addVelocity(vx, vy);
-        GC.shooted();
+        GC.shot();
     }
 
     public boolean anythingMove(){
@@ -105,5 +107,31 @@ public class PhysicsEngine {
 
     public void setGC(GameController GC){
         this.GC = GC;
+    }
+
+    public void setCueball(double x, double y, double w, double r) {
+        Ball ball = Game.getCueBall();
+        boolean state = false;
+        if(x <= 1 || x + (2 * r / w) >= 9){
+            state = true;
+        }
+        else if(y <= 0.75 || y + (2 * r / w) >= 4.75){
+            state = true;
+        }
+        else for(Ball temp: Game.getBalls()){
+            if(temp.isOntable() && temp != ball){
+                double dx = w * (x - temp.getX());
+                double dy = w * (y - temp.getY());
+
+                if(dx * dx + dy * dy <= 4 * r * r) state = true;
+            }
+        }
+        if(state){
+            ball.setX(-w);
+            ball.setY(-w);
+        }else{
+            ball.setX(x);
+            ball.setY(y);
+        }
     }
 }

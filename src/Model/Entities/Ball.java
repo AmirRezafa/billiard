@@ -81,6 +81,9 @@ public class Ball {
         }
     }
 
+    public void setOntable(boolean ontable) {
+        this.ontable = ontable;
+    }
 
     public boolean isMoving(){
         return moving;

@@ -19,7 +19,7 @@ public class Player {
         return foulCount;
     }
 
-    public boolean isBiColor() {
+    public Boolean isBiColor() {
         return biColor;
     }
 
