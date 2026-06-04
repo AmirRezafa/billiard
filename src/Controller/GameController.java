@@ -3,6 +3,7 @@ package Controller;
 import Model.Entities.Ball;
 import Model.Entities.Pocket;
 import Model.Game.Game;
+import Model.Game.GameState;
 import View.Components.PocketView;
 import View.Panels.GamePanel;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public class GameController implements MouseListener, MouseMotionListener {
     private GamePanel GP;
     private PhysicsEngine PE;
+    private GameState GS;
     private boolean showCue = false;
 
     private boolean dragging = false;
@@ -25,9 +27,10 @@ public class GameController implements MouseListener, MouseMotionListener {
     private int powerrange = 0;
     public double angle;
 
-    public GameController(GamePanel GP, PhysicsEngine PE){
+    public GameController(GamePanel GP, PhysicsEngine PE, GameState GS){
         this.GP = GP;
         this.PE = PE;
+        this.GS = GS;
         createBalls();
     }
 
@@ -158,7 +161,10 @@ public class GameController implements MouseListener, MouseMotionListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if(dragging){
-            if(powerrange > 0) PE.shoot(angle, getPowerrange(), GP.getWidth() * 0.1);
+            if(powerrange > 0){
+                GS.switchTurn();
+                PE.shoot(angle, getPowerrange(), GP.getWidth() * 0.1);
+            }
             else System.out.println("Cancelled");
             dragging = false;
             showCue = false;

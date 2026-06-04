@@ -3,8 +3,10 @@ package View.Panels;
 import Controller.GameController;
 import Controller.PhysicsEngine;
 import Model.Entities.Ball;
+import Model.Entities.Player;
 import Model.Entities.Pocket;
 import Model.Game.Game;
+import Model.Game.GameState;
 import View.Components.BallView;
 import View.Components.CueView;
 import View.Components.PocketView;
@@ -16,13 +18,22 @@ public class GamePanel extends JPanel {
     private int ballR = 5;
     private GameController GC;
     private PhysicsEngine PE;
+    private GameState GS;
     private boolean firstFrame = true;
 
     public GamePanel(){
         setBackground(Color.BLACK);
+
+        // TODO: Fix this part
+        GS = new GameState(
+                new Player("AmirReza"),
+                new Player("Awmir")
+        );
+
         PE = new PhysicsEngine();
 
-        GC = new GameController(this, PE);
+        GC = new GameController(this, PE, GS);
+
 
         addMouseMotionListener(GC);
         addMouseListener(GC);
@@ -92,19 +103,20 @@ public class GamePanel extends JPanel {
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, (int)(w / 5)));
 
-        g2.drawString("Ball In Hand", (int) (0.75 * w),(int) (0.5 * w - w / 8));
+        g2.drawString(GS.getStatus().getText(), (int) (0.75 * w),(int) (0.5 * w - w / 8));
 
-        String timeText = "Time: ?????";
+        String timeText = "Time: 60S";
 
         FontMetrics fm = g2.getFontMetrics();
 
         g2.drawString(timeText, (int) (9.25 * w) - fm.stringWidth(timeText),
                 (int) (0.5 * w - w / 8));
 
-        String turn = "Turn: " + "player 2";
-        String player2s = "AmirReza: " + 15;
+        String turn = "Turn: " + GS.getTurn().getName();
+        String player2s = GS.getPlayer2().getName() + ": " + GS.getPlayer2().getScore();
 
-        g2.drawString("Awmir: " + 5, (int) (0.75 * w), (int) (5.25 * w));
+        g2.drawString(GS.getPlayer1().getName() + ": " + GS.getPlayer1().getScore(),
+                (int) (0.75 * w), (int) (5.25 * w));
 
         g2.drawString(turn, (int) (5 * w) -
                         fm.stringWidth(turn) / 2, (int) (5.25 * w));
@@ -115,7 +127,8 @@ public class GamePanel extends JPanel {
                 0, (int)ballR, 7,
                 new Color(128, 0, 0), false, g2);
 
-        BallView.Draw((int) (9.25 * w) - fm.stringWidth(player2s), (int) (5.25 * w) + (int)(ballR * 0.5),
+        BallView.Draw((int) (9.25 * w) - fm.stringWidth(player2s),
+                (int) (5.25 * w) + (int)(ballR * 0.5),
                 0, (int)(ballR), 15,
                 new Color(128, 0, 0), true, g2);
 
