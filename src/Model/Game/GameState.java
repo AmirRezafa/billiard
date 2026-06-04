@@ -15,6 +15,11 @@ public class GameState {
         Turn = true;
     }
 
+    public void reset(){
+        Turn = true;
+        status = GameStatus.BREAK_SHOT;
+    }
+
     public Player getPlayer1() {
         return Player1;
     }

@@ -21,6 +21,11 @@ public class Game {
         cue = new Cue();
     }
 
+    public static void reset(){
+        balls.clear();
+        pockets.clear();
+    }
+
     public static void addBall(Ball ball){
         balls.add(ball);
     }

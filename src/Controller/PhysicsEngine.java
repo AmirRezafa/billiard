@@ -10,9 +10,16 @@ public class PhysicsEngine {
     private ArrayList<Ball> balls;
     private GameController GC;
     private boolean motion = false;
+    private boolean firstHit = true;
 
     public PhysicsEngine() {
         balls = Game.getBalls();
+    }
+
+    public void reset(){
+        balls = Game.getBalls();
+        motion = false;
+        firstHit = true;
     }
 
     public boolean isCollide(Ball ball1, Ball ball2, double w, double r){
@@ -23,6 +30,8 @@ public class PhysicsEngine {
     }
 
     public void collide(Ball ball1, Ball ball2) {
+        if(firstHit) GC.collided(ball2);
+        firstHit = false;
 
         double dx = ball2.getX() - ball1.getX();
         double dy = ball2.getY() - ball1.getY();
@@ -89,6 +98,7 @@ public class PhysicsEngine {
     public void shoot(double angle, int powerRange, double w) {
 //        System.out.println(w);
         motion = true;
+        firstHit = true;
         double vx = (w / 118) * Math.cos(angle) * powerRange / 500;
         double vy = (w / 118) * Math.sin(angle) * powerRange / 500;
         Game.getCueBall().addVelocity(vx, vy);

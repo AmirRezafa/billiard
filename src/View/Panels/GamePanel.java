@@ -103,7 +103,7 @@ public class GamePanel extends JPanel {
             if (!ball.isOntable()) continue;
             BallView.Draw((int) (ball.getX() * w), (int) (ball.getY() * w),
                     0, ballR, ball.getNumber(),
-                    ball.getColor(), g2);
+                    ball.getColor(), g2, true);
         }
 
         if (GC.isShowCue()) CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR, GC.getPowerrange());
@@ -135,16 +135,23 @@ public class GamePanel extends JPanel {
 
         BallView.Draw((int) (0.75 * w), (int) (5.25 * w) + (int)(ballR * 0.5),
                 0, (int)ballR, player1.getColorNumber(),
-                GC.getBallColor(player2.getColorNumber()), g2);
+                GC.getBallColor(player2.getColorNumber()), g2, false);
 
         BallView.Draw((int) (9.25 * w) - fm.stringWidth(player2s),
                 (int) (5.25 * w) + (int)(ballR * 0.5),
                 0, (int)(ballR), player2.getColorNumber(),
-                GC.getBallColor(player2.getColorNumber()), g2);
+                GC.getBallColor(player2.getColorNumber()), g2, false);
 
     }
 
     public int getBallR() {
         return ballR;
+    }
+
+    public void resetGame() {
+        Game.reset();
+        GS.reset();
+        GC.reset();
+        PE.reset();
     }
 }

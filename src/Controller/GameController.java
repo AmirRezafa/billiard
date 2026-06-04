@@ -30,8 +30,6 @@ public class GameController implements MouseListener, MouseMotionListener {
     private ArrayList<Integer> pocketedInTurn = new ArrayList<>();
     private int collideWallCount = 0;
     private boolean breakshotEnded = false;
-    private int rangeCount = 10;
-    private int cueRange = 0;
 
     private boolean foulState = false;
 
@@ -40,6 +38,19 @@ public class GameController implements MouseListener, MouseMotionListener {
         this.PE = PE;
         this.GS = GS;
         createBalls();
+    }
+
+    public void reset(){
+        showCue = false;
+        dragging = false;
+        powerrange = 0;
+        pocketedInTurn.clear();
+        collideWallCount = 0;
+        breakshotEnded = false;
+        foulState = false;
+        createPockets();
+        createBalls();
+
     }
 
     public Color getBallColor(int number) {
@@ -171,7 +182,7 @@ public class GameController implements MouseListener, MouseMotionListener {
             dragging = true;
             startx = e.getX();
             starty = e.getY();
-        }else if(foulState){
+        }else if(foulState && !PE.anythingMove()){
             if(Game.getCueBall().isOntable()){
                 if(Game.getCueBall().getX() < 0) return;
                 if(GS.getTurn().isBiColor() == null)
@@ -219,6 +230,10 @@ public class GameController implements MouseListener, MouseMotionListener {
     }
 
     public void pocketed(Pocket pocket, Ball ball) {
+        if(ball.getNumber() == 8 && !breakshotEnded){
+            GP.resetGame();
+        }
+        System.out.println(ball.getNumber());
         if(GS.getStatus() == GameStatus.OPEN_TABLE && ball.getNumber() != 0){
             GS.getTurn().setBiColor(ball.isBicolor());
             GS.getNotTurn().setBiColor(!ball.isBicolor());
@@ -243,11 +258,13 @@ public class GameController implements MouseListener, MouseMotionListener {
 
         if(!breakshotEnded){
             if(pocketedInTurn.isEmpty() && collideWallCount < 4){
-                System.out.println("Invalid Break");
+                GP.resetGame();
+                return;
             }
         }
         breakshotEnded = true;
 
+        if(collideWallCount == 0 &&  pocketedInTurn.isEmpty()) foulOccurred();
         Player shooter = GS.getTurn();
         Player player = GS.getNotTurn();
 
@@ -267,5 +284,20 @@ public class GameController implements MouseListener, MouseMotionListener {
 
     public void collideWall() {
         collideWallCount += 1;
+    }
+
+    public void collided(Ball ball2) {
+        if(ball2.getNumber() == 8){
+            win(GS.getNotTurn());
+            return;
+        }
+        if(GS.getStatus() == GameStatus.OPEN_TABLE) return;
+        if((ball2.getNumber() > 8) != GS.getTurn().isBiColor()){
+            foulOccurred();
+        }
+    }
+
+    public void win(Player winner){
+        System.out.println(1);
     }
 }

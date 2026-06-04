@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public class BallView {
-    public static void Draw(int x, int y, int angle, int r, int number, Color color, Graphics2D g2){
+    public static void Draw(int x, int y, int angle, int r, int number, Color color, Graphics2D g2, boolean shownumber){
         boolean bi = (number > 8);
         if(bi) g2.setColor(Color.WHITE);
         else g2.setColor(color);
@@ -20,10 +20,12 @@ public class BallView {
             g2.setColor(color);
             g2.fillRoundRect(x + (int) (r / 2), y, r, 2 * r, (int)(r * 0.8), (int)(r * 0.8));
         }
-
         g2.setTransform(old);
+
         g2.setColor(Color.WHITE);
         g2.fillOval(x + (int)(r * 0.5), y +  (int)(r * 0.5), r, r);
+
+        if(!shownumber) return;
         g2.setColor(Color.BLACK);
         String text = String.valueOf(number);
         Font font = new Font("Arial", Font.BOLD, (int)(r * 0.6));
