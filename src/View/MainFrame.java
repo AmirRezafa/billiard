@@ -11,8 +11,7 @@ public class MainFrame extends JFrame {
         super("Billiard");
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        setContentPane(new MainMenuPanel());
-        setContentPane(new GamePanel());
+        setContentPane(new MainMenuPanel());
         setLocationRelativeTo(null);
         setVisible(true);
     }

@@ -39,7 +39,7 @@ public class MainMenuPanel extends JPanel {
         label.setFont(new Font("Arial", Font.BOLD, 40));
         ButtonsPanel.add(label);
         ButtonsPanel.add(Box.createVerticalStrut(15));
-
+        Dimension d = getPreferredSize();
         for(Button button: Button.values()){
             JButton temp = new JButton(button.getName());
             temp.setAlignmentX(Component.CENTER_ALIGNMENT);

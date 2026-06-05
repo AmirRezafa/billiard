@@ -5,6 +5,7 @@ import Model.Entities.Player;
 import Model.Entities.Pocket;
 import Model.Game.Game;
 import Model.Game.GameState;
+import Model.Utils.File;
 import Model.Utils.GameStatus;
 import View.Panels.GamePanel;
 
@@ -304,10 +305,10 @@ public class GameController implements MouseListener, MouseMotionListener {
             }
         }
         if(endGame){
-            if(GS.getTurn().getScore() != 7) win(GS.getNotTurn());
-            else if(foulState) win(GS.getNotTurn());
-            else if(endPocket != GP.getSelectedPocket()) win(GS.getNotTurn());
-
+            if(GS.getTurn().getScore() != 7) win(GS.getNotTurn(), GS.getTurn());
+            else if(foulState) win(GS.getNotTurn(), GS.getTurn());
+            else if(endPocket != GP.getSelectedPocket()) win(GS.getNotTurn(), GS.getTurn());
+            else win(GS.getTurn(), GS.getNotTurn());
         }
         pocketedBalls.clear();
         pocketedPockets.clear();
@@ -321,7 +322,7 @@ public class GameController implements MouseListener, MouseMotionListener {
 
     public void collided(Ball ball2) {
         collide = true;
-        if(ball2.getNumber() == 8){
+        if(ball2.getNumber() == 8 && GS.getTurn().getScore() != 7){
             foulOccurred();
             return;
         }
@@ -329,12 +330,13 @@ public class GameController implements MouseListener, MouseMotionListener {
             return;
         };
         if((ball2.getNumber() > 8) != GS.getTurn().isBiColor()){
-            foulOccurred();
+            if(ball2.getNumber() != 8) foulOccurred();
         }
     }
 
-    public void win(Player winner){
+    public void win(Player winner, Player looser){
         System.out.println(winner.getName());
+        File.addNewGame(winner, looser);
         GP.resetGame();
     }
 }

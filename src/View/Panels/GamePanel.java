@@ -165,9 +165,6 @@ public class GamePanel extends JPanel {
                     ball.getColor(), g2, true);
         }
 
-        if(state == State.GAME) {
-            if (GC.isShowCue()) CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR, GC.getPowerrange());
-        }
         if(state == State.SELECT_SPIN){
             drawSpinOptions(g2, w);
         }
@@ -211,6 +208,11 @@ public class GamePanel extends JPanel {
                 (int) (5.25 * w) + (int)(ballR * 0.5),
                 0, (int)(ballR), player2.getColorNumber(),
                 GC.getBallColor(player2.getColorNumber()), g2, false);
+
+        if(state == State.GAME) {
+            if (GC.isShowCue()) CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR, GC.getPowerrange());
+
+        }
 
 
     }

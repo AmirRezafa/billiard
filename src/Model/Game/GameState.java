@@ -17,6 +17,8 @@ public class GameState {
 
     public void reset(){
         Turn = true;
+        Player1.setScore(0);
+        Player2.setScore(0);
         status = GameStatus.BREAK_SHOT;
     }
 

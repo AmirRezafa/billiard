@@ -53,4 +53,10 @@ public class Player {
         else if(biColor) return 15;
         else return 7;
     }
+
+    public String getData() {
+        return name +
+                ", " + foulCount +
+                ", " + score;
+    }
 }

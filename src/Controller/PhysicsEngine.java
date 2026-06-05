@@ -50,54 +50,27 @@ public class PhysicsEngine {
         if(firstHit){
             double ballSpeed = Math.sqrt(vx * vx + vy * vy);
 
-            if(ballSpeed == 0) return;
             double ux = vx / ballSpeed;
             double uy = vy / ballSpeed;
 
             double dot = ux * nx + uy * ny;
 
-            boolean fullhit = (dot >= 0.7);
 
+            if(GP.getSelectedSpin() == 0){
+
+            }
             if(dot >= 0.7) System.out.println("FULL HIT");
             else System.out.println("CUT HIT");
-
-            double speed = (vx - ball2.getVelocityX()) * nx +
-                    (vy - ball2.getVelocityY()) * ny;
-
-            if (speed <= 0)
-                return;
-
-            ball1.addVelocity(- speed * nx, - speed * ny);
-            ball2.addVelocity(speed * nx, speed * ny);
-
-            dot = Math.max(0, Math.min(1, dot));
-
-            int spin = GP.getSelectedSpin();
-
-            if(spin == 0) {
-                ball1.addVelocity(speed * 0.6 * dot * nx,
-                        speed * 0.6 * dot * ny);
-            }else if(spin == 1) {
-                if (!fullhit) {
-                    double f = 0.15 * (1.0 - dot);
-
-                    ball1.addVelocity(speed * f * -ny,
-                            speed * f * nx);
-                }
-            }else if(spin == 2) {
-                ball1.addVelocity(-speed * 0.6 * dot * nx,
-                        -speed * 0.6 * dot * ny);
-            }
-        }else{
-            double speed = (vx - ball2.getVelocityX()) * nx +
-                    (vy - ball2.getVelocityY()) * ny;
-
-            if(speed <= 0)
-                return;
-
-            ball1.addVelocity(- speed * nx, - speed * ny);
-            ball2.addVelocity(speed * nx, speed * ny);
         }
+
+        double speed = (vx - ball2.getVelocityX()) * nx +
+                (vy - ball2.getVelocityY()) * ny;
+
+        if (speed <= 0)
+            return;
+
+        ball1.addVelocity(- speed * nx, - speed * ny);
+        ball2.addVelocity(speed * nx, speed * ny);
 
         firstHit = false;
     }
