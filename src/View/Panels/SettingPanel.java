@@ -1,5 +1,7 @@
 package View.Panels;
 
+import View.MainFrame;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,6 +10,8 @@ public class SettingPanel extends JPanel {
     private static final Color SideColor = new Color(50, 50, 50);
     private static final Dimension ButtonSize = new Dimension(220, 50);
     private static final Dimension FieldSize = new Dimension(250, 30);
+
+    private MainFrame MF;
 
     private final JTextField Player1Field = new JTextField();
     private final JTextField Player2Field = new JTextField();
@@ -52,7 +56,8 @@ public class SettingPanel extends JPanel {
         add(comp, gbc);
     }
 
-    public SettingPanel(){
+    public SettingPanel(MainFrame MF){
+        this.MF = MF;
         setBackground(BackgroundColor);
 
 //        setLayout(new BorderLayout());
@@ -92,6 +97,17 @@ public class SettingPanel extends JPanel {
 
         JButton saveButton = new JButton("Save");
         JButton backButton = new JButton("Back");
+
+        saveButton.addActionListener(e -> {
+            MF.setContentPane(new MainMenuPanel(MF));
+            MF.revalidate();
+            MF.repaint();
+        });
+        backButton.addActionListener(e -> {
+            MF.setContentPane(new MainMenuPanel(MF));
+            MF.revalidate();
+            MF.repaint();
+        });
 
         ButtonPanel.add(backButton);
         ButtonPanel.add(saveButton);

@@ -1,8 +1,9 @@
 package View.Panels;
 
+import View.MainFrame;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
 
 public class MainMenuPanel extends JPanel {
     private static final Color backGroundColor = new Color(25, 25, 25);
@@ -10,10 +11,34 @@ public class MainMenuPanel extends JPanel {
 
     private final JLabel label = new JLabel("Billiard");
 
+    private static MainFrame MF;
+    // :(((( SAD FOR Abbreviation
+
     private enum Button{
-        Start("Start"),
-        Setting("Setting"),
-        Exit("Exit");
+        Start("Start") {
+            @Override
+            public void clicked() {
+                MF.setContentPane(new GamePanel());
+                MF.revalidate();
+                MF.repaint();
+            }
+        },
+        Setting("Setting") {
+            @Override
+            public void clicked() {
+                MF.setContentPane(new SettingPanel(MF));
+                MF.revalidate();
+                MF.repaint();
+
+            }
+        },
+        Exit("Exit") {
+            @Override
+            public void clicked() {
+                System.out.println("DONE :((((");
+                System.exit(0);
+            }
+        };
 
         private String Name;
         Button(String Name){
@@ -23,9 +48,12 @@ public class MainMenuPanel extends JPanel {
         public String getName() {
             return Name;
         }
+
+        public abstract void clicked();
     }
 
-    public MainMenuPanel(){
+    public MainMenuPanel(MainFrame MF){
+        this.MF = MF;
         setLayout(new GridBagLayout());
         setBackground(backGroundColor);
 
@@ -47,6 +75,7 @@ public class MainMenuPanel extends JPanel {
             temp.setMinimumSize(ButtonSize);
             temp.setMaximumSize(ButtonSize);
             temp.setFocusPainted(false);
+            temp.addActionListener(e -> button.clicked());
             ButtonsPanel.add(Box.createVerticalStrut(15));
             ButtonsPanel.add(temp);
         }
