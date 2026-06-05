@@ -2,6 +2,8 @@ package View.Panels;
 
 import Controller.GameController;
 import Controller.PhysicsEngine;
+import Controller.SelectPocket;
+import Controller.SelectSpin;
 import Model.Entities.Ball;
 import Model.Entities.Player;
 import Model.Entities.Pocket;
@@ -20,9 +22,34 @@ public class GamePanel extends JPanel {
     private GameController GC;
     private PhysicsEngine PE;
     private GameState GS;
+    private SelectPocket SP;
+    private SelectSpin SS;
+
     private boolean firstFrame = true;
     private Player player1;
     private Player player2;
+
+
+    enum State{
+        SELECT_POCKET("Select Pocket"),
+        SELECT_SPIN("Select Spin"),
+        GAME("Game");
+
+        private String name;
+        State(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    private Pocket selectedPocket;
+    private int selectedSpin;
+
+    State state = State.GAME;
+    State laststate = State.GAME;
 
     public GamePanel(){
         setBackground(Color.BLACK);
@@ -42,6 +69,10 @@ public class GamePanel extends JPanel {
         GC = new GameController(this, PE, GS);
 
         PE.setGC(GC);
+
+        SP = new SelectPocket(this);
+
+        SS = new SelectSpin(this);
 
 
         addMouseMotionListener(GC);
@@ -63,6 +94,34 @@ public class GamePanel extends JPanel {
         g2.fillRoundRect(x, y, width, height, 15, 15);
         g2.setPaint(color);
         g2.fillRoundRect(x, y, filledWidth, height, 15, 15);
+    }
+
+    private void drawSpinOptions(Graphics2D g2, double w){
+        // w + 8w, 0.75w + 4w
+        Composite composite = g2.getComposite();
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                0.7f
+        ));
+
+        BallView.Draw((int)(5 * w) - (int)(1.5 * w), (int)(w * 2.75) - (int)(1.5 * w),
+                0, (int)(1.5 * w),
+                0, Color.white, g2, false);
+
+        g2.setComposite(composite);
+
+
+        int r = (int)(0.35 * w);
+        int[] xs = new int[5], ys = new int[5];
+        xs[0] = (int)(5 * w) - r; ys[0] = (int)(1.75 * w) - r;
+        xs[1] = (int)(5 * w) - r; ys[1] = (int)(2.75 * w) - r;
+        xs[2] = (int)(5 * w) - r; ys[2] = (int)(3.75 * w) - r;
+        xs[3] = (int)(4 * w) - r; ys[3] = (int)(2.75 * w) - r;
+        xs[4] = (int)(6 * w) - r; ys[4] = (int)(2.75 * w) - r;
+
+        for(int i = 0; i < 5; i++){
+            g2.setColor(Color.red);
+            g2.fillOval(xs[i], ys[i], 2 * r, 2 * r);
+        }
     }
 
     @Override
@@ -106,7 +165,12 @@ public class GamePanel extends JPanel {
                     ball.getColor(), g2, true);
         }
 
-        if (GC.isShowCue()) CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR, GC.getPowerrange());
+        if(state == State.GAME) {
+            if (GC.isShowCue()) CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR, GC.getPowerrange());
+        }
+        if(state == State.SELECT_SPIN){
+            drawSpinOptions(g2, w);
+        }
 
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, (int)(w / 5)));
@@ -121,6 +185,7 @@ public class GamePanel extends JPanel {
                 (int) (0.5 * w - w / 8));
 
         String turn = "Turn: " + GS.getTurn().getName();
+        String selectState = state.getName();
         String player2s = player2.getName() + ": " + player2.getScore();
 
         g2.drawString(player1.getName() + ": " + player1.getScore(),
@@ -128,6 +193,11 @@ public class GamePanel extends JPanel {
 
         g2.drawString(turn, (int) (5 * w) -
                         fm.stringWidth(turn) / 2, (int) (5.25 * w));
+
+        if(state != State.GAME){
+            g2.drawString(selectState, (int) (5 * w) -
+                    fm.stringWidth(selectState) / 2, (int) (0.5 * w - w / 8));
+        }
 
         g2.drawString(player2s, (int) (9.25 * w) - fm.stringWidth(player2s), (int) (5.25 * w));
 
@@ -142,6 +212,7 @@ public class GamePanel extends JPanel {
                 0, (int)(ballR), player2.getColorNumber(),
                 GC.getBallColor(player2.getColorNumber()), g2, false);
 
+
     }
 
     public int getBallR() {
@@ -153,5 +224,44 @@ public class GamePanel extends JPanel {
         GS.reset();
         GC.reset();
         PE.reset();
+    }
+
+    public void selectPocket(){
+        laststate = state;
+        state = State.SELECT_POCKET;
+        removeMouseListener(GC);
+        removeMouseMotionListener(GC);
+        addMouseListener(SP);
+    }
+
+    public void selectSpin(){
+        laststate = state;
+        state = State.SELECT_SPIN;
+        removeMouseListener(GC);
+        removeMouseMotionListener(GC);
+        addMouseListener(SS);
+    }
+
+    public void pocketSelected(Pocket pocket) {
+        state = State.SELECT_SPIN;
+        selectedPocket = pocket;
+        removeMouseListener(SP);
+        addMouseListener(SS);
+    }
+
+    public void spinSelected(int i) {
+        state = laststate;
+        removeMouseListener(SS);
+        selectedSpin = i;
+        addMouseListener(GC);
+        addMouseMotionListener(GC);
+    }
+
+    public int getSelectedSpin() {
+        return selectedSpin;
+    }
+
+    public Pocket getSelectedPocket() {
+        return selectedPocket;
     }
 }
