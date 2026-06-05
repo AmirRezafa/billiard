@@ -20,7 +20,6 @@ public class SettingPanel extends JPanel {
     private final JComboBox<String> combo = new JComboBox<>(
             new String[]{
                     "Classic",
-                    "Modern",
                     "Professional"
             }
     );

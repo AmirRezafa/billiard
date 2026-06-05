@@ -9,6 +9,7 @@ import Model.Entities.Player;
 import Model.Entities.Pocket;
 import Model.Game.Game;
 import Model.Game.GameState;
+import Model.Utils.File;
 import Model.Utils.GameStatus;
 import View.Components.BallView;
 import View.Components.CueView;
@@ -50,15 +51,19 @@ public class GamePanel extends JPanel {
     private Pocket selectedPocket;
     private int selectedSpin;
 
+    private int cueStyle = 0;
+
     State state = State.GAME;
     State laststate = State.GAME;
 
     public GamePanel(){
         setBackground(Color.BLACK);
 
-        // TODO: Fix this part
-        player1 = new Player("AmirReza");
-        player2 = new Player("Awmir");
+        String[] data = File.readSetting();
+        player1 = new Player(data[0]);
+        player2 = new Player(data[1]);
+        cueStyle = Integer.parseInt(data[2]);
+
         
         GS = new GameState(
                 player1,
@@ -212,7 +217,7 @@ public class GamePanel extends JPanel {
                 GC.getBallColor(player2.getColorNumber()), g2, false);
 
         if(state == State.GAME) {
-            if (GC.isShowCue()) CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR, GC.getPowerrange());
+            if (GC.isShowCue()) CueView.draw(g2, Game.getCue(), Game.getCueBall(), w, ballR, GC.getPowerrange(), cueStyle);
 
         }
 
