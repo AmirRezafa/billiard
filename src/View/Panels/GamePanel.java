@@ -16,6 +16,8 @@ import View.Components.PocketView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 public class GamePanel extends JPanel {
     private int ballR = 5;
@@ -226,6 +228,16 @@ public class GamePanel extends JPanel {
         GS.reset();
         GC.reset();
         PE.reset();
+        for(MouseMotionListener listener : getMouseMotionListeners())
+            removeMouseMotionListener(listener);
+
+        for(MouseListener listener : getMouseListeners())
+            removeMouseListener(listener);
+
+        state = State.GAME;
+        addMouseListener(GC);
+        addMouseMotionListener(GC);
+
     }
 
     public void selectPocket(){
@@ -234,6 +246,7 @@ public class GamePanel extends JPanel {
         removeMouseListener(GC);
         removeMouseMotionListener(GC);
         addMouseListener(SP);
+
     }
 
     public void selectSpin(){

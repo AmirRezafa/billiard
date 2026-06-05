@@ -40,7 +40,7 @@ public class Player {
         this.foulCount = foulCount;
     }
 
-    public void setBiColor(boolean biColor) {
+    public void setBiColor(Boolean biColor) {
         this.biColor = biColor;
     }
 

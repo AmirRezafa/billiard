@@ -23,6 +23,14 @@ public class MainMenuPanel extends JPanel {
                 MF.repaint();
             }
         },
+        Records("Records") {
+            @Override
+            public void clicked() {
+                MF.setContentPane(new RecordsPanel(MF));
+                MF.revalidate();
+                MF.repaint();
+            }
+        },
         Setting("Setting") {
             @Override
             public void clicked() {

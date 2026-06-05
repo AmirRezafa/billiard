@@ -1,5 +1,6 @@
 package View.Panels;
 
+import Model.Utils.File;
 import View.MainFrame;
 
 import javax.swing.*;
@@ -99,6 +100,8 @@ public class SettingPanel extends JPanel {
         JButton backButton = new JButton("Back");
 
         saveButton.addActionListener(e -> {
+            File.SaveSetting(Player1Field.getText(), Player2Field.getText(),
+                    combo.getSelectedIndex(), slider.getValue());
             MF.setContentPane(new MainMenuPanel(MF));
             MF.revalidate();
             MF.repaint();
@@ -116,6 +119,16 @@ public class SettingPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         add(ButtonPanel, gbc);
+
+
+
+        // load data
+
+        String[] data = File.readSetting();
+        Player1Field.setText(data[0]);
+        Player2Field.setText(data[1]);
+        combo.setSelectedIndex(Integer.parseInt(data[2]));
+        slider.setValue(Integer.parseInt(data[3]));
     }
 
     public JTextField getPlayer1Field() {

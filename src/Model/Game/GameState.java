@@ -19,6 +19,8 @@ public class GameState {
         Turn = true;
         Player1.setScore(0);
         Player2.setScore(0);
+        getPlayer1().setBiColor(null);
+        getPlayer2().setBiColor(null);
         status = GameStatus.BREAK_SHOT;
     }
 

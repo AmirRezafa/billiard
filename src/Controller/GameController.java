@@ -51,9 +51,12 @@ public class GameController implements MouseListener, MouseMotionListener {
         collideWallCount = 0;
         breakshotEnded = false;
         foulState = false;
+        collide = false;
+        pocketedBalls.clear();
+        pocketedPockets.clear();
+
         createPockets();
         createBalls();
-
     }
 
     public Color getBallColor(int number) {
@@ -231,7 +234,6 @@ public class GameController implements MouseListener, MouseMotionListener {
     }
 
     private void foulOccurred(){
-        if(foulState) return;
         foulState = true;
         GS.setStatus(GameStatus.FOUL);
         GS.getTurn().setFoulCount(GS.getTurn().getFoulCount() + 1);

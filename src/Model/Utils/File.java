@@ -30,4 +30,29 @@ public class File {
         }
         return fin;
     }
+
+
+    public static void SaveSetting(String player1Name, String player2Name, int CueStyle, int volume){
+        try{
+            FileWriter fw = new FileWriter("src/Model/Data/Setting.data", false);
+            BufferedWriter writer = new BufferedWriter(fw);
+            writer.write(player1Name + ", " + player2Name + ", " +
+                    String.valueOf(CueStyle) + ", " + String.valueOf(volume));
+            writer.close();
+
+        } catch (IOException e) {
+            System.out.println("Setting.data not founded");
+        }
+    }
+
+    public static String[] readSetting(){
+        String[] line = new String[4];
+        try (BufferedReader br = new BufferedReader(new FileReader("src/Model/Data/Setting.data"))) {
+            line = br.readLine().split(", ");
+
+        } catch (Exception e) {
+            System.out.println("Setting.data not founded");
+        }
+        return line;
+    }
 }
