@@ -64,7 +64,7 @@ public class GamePanel extends JPanel {
         );
 
 
-        PE = new PhysicsEngine();
+        PE = new PhysicsEngine(this);
 
         GC = new GameController(this, PE, GS);
 

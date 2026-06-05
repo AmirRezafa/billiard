@@ -24,7 +24,8 @@ public class SelectSpin implements MouseListener {
         xs[3] = (int)(4 * w); ys[3] = (int)(2.75 * w);
         xs[4] = (int)(6 * w); ys[4] = (int)(2.75 * w);
 
-        for(int i = 0; i < 5; i++){
+        // TODO: ADD SIDE SPIN
+        for(int i = 0; i < 3; i++){
             double dx = e.getX() - xs[i];
             double dy = e.getY() - ys[i];
 

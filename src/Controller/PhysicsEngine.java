@@ -3,16 +3,19 @@ package Controller;
 import Model.Entities.Ball;
 import Model.Entities.Pocket;
 import Model.Game.Game;
+import View.Panels.GamePanel;
 
 import java.util.ArrayList;
 
 public class PhysicsEngine {
     private ArrayList<Ball> balls;
     private GameController GC;
+    private GamePanel GP;
     private boolean motion = false;
     private boolean firstHit = true;
 
-    public PhysicsEngine() {
+    public PhysicsEngine(GamePanel GP) {
+        this.GP = GP;
         balls = Game.getBalls();
     }
 
@@ -31,7 +34,6 @@ public class PhysicsEngine {
 
     public void collide(Ball ball1, Ball ball2) {
         if(firstHit) GC.collided(ball2);
-        firstHit = false;
 
         double dx = ball2.getX() - ball1.getX();
         double dy = ball2.getY() - ball1.getY();
@@ -41,14 +43,63 @@ public class PhysicsEngine {
 
         double nx = dx / distance;
         double ny = dy / distance;
-        double speed = (ball1.getVelocityX() - ball2.getVelocityX()) * nx +
-                        (ball1.getVelocityY() - ball2.getVelocityY()) * ny;
 
-        if (speed <= 0)
-            return;
+        double vx = ball1.getVelocityX();
+        double vy = ball1.getVelocityY();
 
-        ball1.addVelocity(- speed * nx, - speed * ny);
-        ball2.addVelocity(speed * nx, speed * ny);
+        if(firstHit){
+            double ballSpeed = Math.sqrt(vx * vx + vy * vy);
+
+            if(ballSpeed == 0) return;
+            double ux = vx / ballSpeed;
+            double uy = vy / ballSpeed;
+
+            double dot = ux * nx + uy * ny;
+
+            boolean fullhit = (dot >= 0.7);
+
+            if(dot >= 0.7) System.out.println("FULL HIT");
+            else System.out.println("CUT HIT");
+
+            double speed = (vx - ball2.getVelocityX()) * nx +
+                    (vy - ball2.getVelocityY()) * ny;
+
+            if (speed <= 0)
+                return;
+
+            ball1.addVelocity(- speed * nx, - speed * ny);
+            ball2.addVelocity(speed * nx, speed * ny);
+
+            dot = Math.max(0, Math.min(1, dot));
+
+            int spin = GP.getSelectedSpin();
+
+            if(spin == 0) {
+                ball1.addVelocity(speed * 0.6 * dot * nx,
+                        speed * 0.6 * dot * ny);
+            }else if(spin == 1) {
+                if (!fullhit) {
+                    double f = 0.15 * (1.0 - dot);
+
+                    ball1.addVelocity(speed * f * -ny,
+                            speed * f * nx);
+                }
+            }else if(spin == 2) {
+                ball1.addVelocity(-speed * 0.6 * dot * nx,
+                        -speed * 0.6 * dot * ny);
+            }
+        }else{
+            double speed = (vx - ball2.getVelocityX()) * nx +
+                    (vy - ball2.getVelocityY()) * ny;
+
+            if(speed <= 0)
+                return;
+
+            ball1.addVelocity(- speed * nx, - speed * ny);
+            ball2.addVelocity(speed * nx, speed * ny);
+        }
+
+        firstHit = false;
     }
 
     public boolean pocketed(Ball ball, Pocket pocket, double w, double r){
@@ -129,13 +180,13 @@ public class PhysicsEngine {
             state = true;
         }
         else for(Ball temp: Game.getBalls()){
-            if(temp.isOntable() && temp != ball){
-                double dx = w * (x - temp.getX());
-                double dy = w * (y - temp.getY());
+                if(temp.isOntable() && temp != ball){
+                    double dx = w * (x - temp.getX());
+                    double dy = w * (y - temp.getY());
 
-                if(dx * dx + dy * dy <= 4 * r * r) state = true;
+                    if(dx * dx + dy * dy <= 4 * r * r) state = true;
+                }
             }
-        }
         if(state){
             ball.setX(-w);
             ball.setY(-w);

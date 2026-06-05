@@ -32,6 +32,7 @@ public class GameController implements MouseListener, MouseMotionListener {
     private boolean breakshotEnded = false;
 
     private boolean foulState = false;
+    private boolean collide = false;
 
     public GameController(GamePanel GP, PhysicsEngine PE, GameState GS){
         this.GP = GP;
@@ -229,6 +230,7 @@ public class GameController implements MouseListener, MouseMotionListener {
     }
 
     private void foulOccurred(){
+        if(foulState) return;
         foulState = true;
         GS.setStatus(GameStatus.FOUL);
         GS.getTurn().setFoulCount(GS.getTurn().getFoulCount() + 1);
@@ -238,7 +240,7 @@ public class GameController implements MouseListener, MouseMotionListener {
         if(ball.getNumber() == 8 && !breakshotEnded){
             GP.resetGame();
         }
-        if(GS.getStatus() == GameStatus.OPEN_TABLE && ball.getNumber() != 0){
+        if(GS.getTurn().getScore() + GS.getNotTurn().getScore() == 0 && ball.getNumber() != 0){
             GS.getTurn().setBiColor(ball.isBicolor());
             GS.getNotTurn().setBiColor(!ball.isBicolor());
             GS.setStatus(GameStatus.NORMAL_PLAY);
@@ -255,6 +257,7 @@ public class GameController implements MouseListener, MouseMotionListener {
     }
 
     public void shot(){
+        collide = false;
         if(GS.getStatus() == GameStatus.BREAK_SHOT){
             GS.setStatus(GameStatus.OPEN_TABLE);
         }
@@ -270,12 +273,15 @@ public class GameController implements MouseListener, MouseMotionListener {
             }
         }
         breakshotEnded = true;
+        if(collideWallCount == 0 && pocketedBalls.isEmpty()) foulOccurred();
+        if(!collide) foulOccurred();
 
         if(GS.getStatus() != GameStatus.OPEN_TABLE && GS.getStatus() != GameStatus.FOUL){
             GP.selectPocket();
-        }else if(GS.getStatus() != GameStatus.FOUL)
+        }else if(GS.getStatus() != GameStatus.FOUL) {
             GP.selectSpin();
-        if(collideWallCount == 0 &&  pocketedBalls.isEmpty()) foulOccurred();
+        }
+
         Player shooter = GS.getTurn();
         Player player = GS.getNotTurn();
 
@@ -285,6 +291,7 @@ public class GameController implements MouseListener, MouseMotionListener {
         for(int i = 0; i < pocketedBalls.size(); i++){
             Ball ball = pocketedBalls.get(i);
             Pocket pocket = pocketedPockets.get(i);
+
             if(ball.getNumber() == 8){
                 endGame = true;
                 endPocket = pocket;
@@ -300,7 +307,7 @@ public class GameController implements MouseListener, MouseMotionListener {
             if(GS.getTurn().getScore() != 7) win(GS.getNotTurn());
             else if(foulState) win(GS.getNotTurn());
             else if(endPocket != GP.getSelectedPocket()) win(GS.getNotTurn());
-            
+
         }
         pocketedBalls.clear();
         pocketedPockets.clear();
@@ -313,6 +320,7 @@ public class GameController implements MouseListener, MouseMotionListener {
     }
 
     public void collided(Ball ball2) {
+        collide = true;
         if(ball2.getNumber() == 8){
             foulOccurred();
             return;
